@@ -24,6 +24,48 @@ const PRESET_MODELS = [
   },
 ];
 
+const CORE_FEATURES = [
+  {
+    title: 'AI-Powered Creation Engine',
+    description: 'Our model blends your photo with any style image to produce natural, photorealistic results.',
+    image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&q=80',
+  },
+  {
+    title: 'High-Quality Output',
+    description: 'Generate sharp, detailed images suitable for portfolios, social media, or personal use.',
+    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80',
+  },
+  {
+    title: 'Fast Generation',
+    description: 'Get your personalized image in seconds. No queues, no waiting — instant results.',
+    image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=600&q=80',
+  },
+  {
+    title: 'Privacy First',
+    description: 'Your photos are processed securely. We do not store or train on your images.',
+    image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&q=80',
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    question: 'What kind of photos work best?',
+    answer: 'Use a clear selfie or full-body photo with good lighting. The AI works best with front-facing or slight-angle shots. Avoid heavy filters or obscured faces.',
+  },
+  {
+    question: 'How long does generation take?',
+    answer: 'Typically a few seconds. Generation time depends on server load but is usually under 30 seconds.',
+  },
+  {
+    question: 'Is my data stored?',
+    answer: 'We process your images to generate results and do not retain them for training or storage. Your privacy is a priority.',
+  },
+  {
+    question: 'What image formats are supported?',
+    answer: 'You can upload JPEG, PNG, or WebP images. Each file should be under 4MB for best performance.',
+  },
+];
+
 export default function Home() {
   const [userImage, setUserImage] = useState<string | null>(null);
   const [modelImage, setModelImage] = useState<string | null>(null);
@@ -33,6 +75,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [connectionTest, setConnectionTest] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<UploadSlot | null>(null);
+  const [faqOpen, setFaqOpen] = useState<number | null>(0);
 
   const readFile = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -199,13 +242,128 @@ export default function Home() {
 
   return (
     <main className={styles.page}>
-      <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>Modelly</h1>
-          <p className={styles.subtitle}>
-            Combine your photo with a model image to create a realistic personalized result.
+      {/* Hero */}
+      <section id="hero" className={styles.hero}>
+        <div className={styles.heroBg} aria-hidden />
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>
+            Generator AI
+            <br />
+            <span className={styles.heroTitleAccent}>Modelly</span>
+          </h1>
+          <p className={styles.heroSubtitle}>
+            Combine your photo with any model image to create stunning, realistic
+            personalized results in seconds. Powered by AI — no design skills needed.
           </p>
-        </header>
+          <div className={styles.heroCtas}>
+            <a href="#create" className={styles.heroCta}>
+              Start Now
+            </a>
+            <a href="#how-it-works" className={styles.heroCtaSecondary}>
+              See how it works
+            </a>
+          </div>
+          <p className={styles.heroDisclaimer}>
+            Upload your photo and a style image. Results are generated in seconds.
+          </p>
+        </div>
+        <div className={styles.heroDeco} aria-hidden />
+      </section>
+
+      {/* How to Use on Modelly */}
+      <section id="how-it-works" className={styles.section}>
+        <div className={styles.containerWide}>
+          <h2 className={styles.sectionTitle}>How to Use on Modelly</h2>
+          <p className={styles.sectionSubtitle}>
+            Three simple steps to your personalized model image.
+          </p>
+          <ul className={styles.steps}>
+            <li className={styles.step}>
+              <span className={styles.stepIcon} data-step="1" />
+              <h3 className={styles.stepTitle}>Upload your photo</h3>
+              <p className={styles.stepText}>
+                Add a clear selfie or full-body photo. The AI uses your face and pose as the base.
+              </p>
+            </li>
+            <li className={styles.step}>
+              <span className={styles.stepIcon} data-step="2" />
+              <h3 className={styles.stepTitle}>Choose a model image</h3>
+              <p className={styles.stepText}>
+                Pick a template or upload any outfit, style, or pose you want to try on.
+              </p>
+            </li>
+            <li className={styles.step}>
+              <span className={styles.stepIcon} data-step="3" />
+              <h3 className={styles.stepTitle}>Generate & download</h3>
+              <p className={styles.stepText}>
+                Get your personalized image in seconds. Download and share.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Core Features — 2x2 with images */}
+      <section id="features" className={`${styles.section} ${styles.sectionAlt}`}>
+        <div className={styles.containerWide}>
+          <h2 className={styles.sectionTitle}>Modelly Core Features</h2>
+          <p className={styles.sectionSubtitle}>
+            Built for quality, speed, and your privacy.
+          </p>
+          <div className={styles.coreFeaturesGrid}>
+            {CORE_FEATURES.map((feature, i) => (
+              <div key={i} className={styles.coreFeatureCard}>
+                <div className={styles.coreFeatureImgWrap}>
+                  <img src={feature.image} alt="" className={styles.coreFeatureImg} />
+                </div>
+                <h3 className={styles.coreFeatureTitle}>{feature.title}</h3>
+                <p className={styles.coreFeatureText}>{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className={styles.section}>
+        <div className={styles.container}>
+          <h2 className={styles.sectionTitle}>Frequently Asked Questions</h2>
+          <p className={styles.sectionSubtitle}>
+            Quick answers about Modelly.
+          </p>
+          <div className={styles.faqList}>
+            {FAQ_ITEMS.map((item, i) => (
+              <div
+                key={i}
+                className={`${styles.faqItem} ${faqOpen === i ? styles.faqItemOpen : ''}`}
+              >
+                <button
+                  type="button"
+                  className={styles.faqQuestion}
+                  onClick={() => setFaqOpen(faqOpen === i ? null : i)}
+                  aria-expanded={faqOpen === i}
+                >
+                  {item.question}
+                  <span className={styles.faqChevron} aria-hidden>▼</span>
+                </button>
+                <div className={styles.faqAnswerWrap}>
+                  <p className={styles.faqAnswer}>{item.answer}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Create — main tool */}
+      <section id="create" className={styles.section}>
+        <div className={styles.container}>
+          <header className={styles.header}>
+            <h2 className={styles.title}>Create your image</h2>
+            <p className={styles.subtitle}>
+              Upload your photo and a model image to generate a personalized result.
+            </p>
+          </header>
 
         <section className={styles.uploads}>
           <div
@@ -349,7 +507,45 @@ export default function Home() {
             </div>
           </section>
         )}
-      </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className={styles.finalCta}>
+        <div className={styles.finalCtaContent}>
+          <span className={styles.finalCtaLogo} aria-hidden>◇</span>
+          <h2 className={styles.finalCtaTitle}>Experience Modelly Now</h2>
+          <p className={styles.finalCtaText}>
+            Create your first AI-powered personalized model image in seconds. No sign-up required.
+          </p>
+          <a href="#create" className={styles.finalCtaBtn}>
+            Start Now
+          </a>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className={styles.footer}>
+        <div className={styles.footerWrap}>
+          <div className={styles.footerBrand}>
+            <span className={styles.footerLogoIcon}>◇</span>
+            <span>Modelly</span>
+          </div>
+          <p className={styles.footerTagline}>
+            AI-powered personalized model images. Create something unique.
+          </p>
+          <div className={styles.footerLinks}>
+            <a href="#hero">Home</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#features">Features</a>
+            <a href="#faq">FAQ</a>
+            <a href="#create">Create</a>
+          </div>
+          <p className={styles.footerCopy}>
+            © {new Date().getFullYear()} Modelly. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }

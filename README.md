@@ -19,19 +19,9 @@ A web app that combines your photo with a model image to create a realistic pers
    npm install
    ```
 
-2. **Configure an AI provider** (use one)
+2. **Configure Nano Banana API**
 
-   Create `.env.local` in the project root.
-
-   **Option A — fal.ai (recommended)**  
-   Get a key at [fal.ai](https://fal.ai) and add:
-
-   ```env
-   FAL_KEY=your_fal_key_here
-   ```
-
-   **Option B — Nano Banana**  
-   If `api.nano-banana.run` is reachable from your network, add:
+   Create `.env.local` in the project root. Get a key at [nano-banana.run](https://nano-banana.run) or Google AI Studio and add:
 
    ```env
    NANO_BANANA_API_KEY=your_api_key_here
@@ -59,8 +49,10 @@ A web app that combines your photo with a model image to create a realistic pers
 
 ## Troubleshooting
 
-- **"Can't reach the AI service" / "Nano Banana API unreachable"**  
-  Use **fal.ai** instead: add `FAL_KEY` to `.env.local` (get a key at [fal.ai](https://fal.ai)). The app will use fal.ai Virtual Try-On when `FAL_KEY` is set.
+- **"No API key set"**  
+  Add `NANO_BANANA_API_KEY` to `.env.local` (get a key at [nano-banana.run](https://nano-banana.run) or Google AI Studio).
+- **"Nano Banana API unreachable"**  
+  Check your API key and network. Ensure the key is valid and the service is reachable.
 
 ## Notes
 

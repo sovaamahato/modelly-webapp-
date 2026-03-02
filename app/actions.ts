@@ -9,18 +9,18 @@ export async function ping(): Promise<{ ok: boolean; message: string }> {
 
 const NANO_BANANA_API_URL =
   process.env.NANO_BANANA_API_URL || 'https://api.nano-banana.run/v1/edit';
-const FAL_VIRTUAL_TRYON_URL = 'https://fal.run/fal-ai/image-apps-v2/virtual-try-on';
+const GEMINI_IMAGE_MODEL = 'gemini-2.5-flash-image';
 const MAX_SIZE_BYTES = 4 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
-function getFalKey(): string | null {
-  const k = process.env.FAL_KEY;
-  return (k && k.trim()) ? k.trim() : null;
-}
-
-function getNanoBananaKey(): string | null {
+function getApiKey(): string | null {
   const k = process.env.NANO_BANANA_API_KEY;
   return (k && k.trim()) || null;
+}
+
+/** True if the key looks like a Google API key (use Gemini instead of Nano Banana). */
+function isGoogleApiKey(key: string): boolean {
+  return key.startsWith('AIzaSy');
 }
 
 async function compositeImages(userBuffer: Buffer, modelBuffer: Buffer): Promise<Buffer> {
@@ -84,57 +84,11 @@ export async function generateImage(formData: FormData): Promise<GenerateResult>
     const userBuffer = Buffer.from(await userFile.arrayBuffer());
     const modelBuffer = Buffer.from(await modelFile.arrayBuffer());
 
-    const falKey = getFalKey();
-    if (falKey) {
-      if (falKey === 'your_fal_key_here' || falKey.length < 20) {
-        return {
-          error:
-            'Replace your_fal_key_here in .env.local with your real key from https://fal.ai/dashboard/keys — then save and restart the dev server.',
-        };
-      }
-      const personDataUri = `data:${userFile.type};base64,${userBuffer.toString('base64')}`;
-      const clothingDataUri = `data:${modelFile.type};base64,${modelBuffer.toString('base64')}`;
-      const response = await fetch(FAL_VIRTUAL_TRYON_URL, {
-        method: 'POST',
-        headers: {
-          Authorization: `Key ${falKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          person_image_url: personDataUri,
-          clothing_image_url: clothingDataUri,
-          preserve_pose: true,
-        }),
-      });
-      if (!response.ok) {
-        const errText = await response.text();
-        console.error('fal.ai error:', response.status, errText);
-        return {
-          error:
-            response.status === 401
-              ? 'Invalid FAL_KEY. Create a key at https://fal.ai/dashboard/keys (API scope), put it in .env.local as FAL_KEY=your_key with no quotes/spaces, save, then restart the dev server (Ctrl+C, npm run dev).'
-              : `AI failed: ${errText.slice(0, 150)}`,
-        };
-      }
-      const data = (await response.json()) as { images?: Array<{ url?: string }> };
-      const imageUrl = data.images?.[0]?.url;
-      if (!imageUrl) {
-        return { error: 'AI did not return an image.' };
-      }
-      const imgRes = await fetch(imageUrl);
-      if (!imgRes.ok) {
-        return { error: 'Could not fetch result image.' };
-      }
-      const arr = await imgRes.arrayBuffer();
-      const imageBase64 = Buffer.from(arr).toString('base64');
-      return { image: `data:image/png;base64,${imageBase64}` };
-    }
-
-    const nanoKey = getNanoBananaKey();
-    if (!nanoKey) {
+    const apiKey = getApiKey();
+    if (!apiKey) {
       return {
         error:
-          'No API key set. Add FAL_KEY (get one at https://fal.ai) or NANO_BANANA_API_KEY to .env.local.',
+          'No API key set. Add NANO_BANANA_API_KEY to .env.local (nano-banana.run or Google AI Studio key).',
       };
     }
 
@@ -146,10 +100,54 @@ export async function generateImage(formData: FormData): Promise<GenerateResult>
       "Keep the person's face from the left image clearly recognizable. " +
       'Output only one combined image, no grid, no labels.';
 
+    if (isGoogleApiKey(apiKey)) {
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_IMAGE_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const geminiRes = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { inlineData: { mimeType: 'image/png', data: base64Image } },
+                { text: prompt },
+              ],
+            },
+          ],
+          generationConfig: {
+            responseModalities: ['TEXT', 'IMAGE'],
+            responseMimeType: 'text/plain',
+          },
+        }),
+      });
+      if (!geminiRes.ok) {
+        const errText = await geminiRes.text();
+        console.error('Gemini API error:', geminiRes.status, errText);
+        return {
+          error:
+            geminiRes.status === 401 || geminiRes.status === 403
+              ? 'Invalid Google API key. Check NANO_BANANA_API_KEY in .env.local or get a key at aistudio.google.com.'
+              : `AI failed: ${errText.slice(0, 150)}`,
+        };
+      }
+      const geminiData = (await geminiRes.json()) as {
+        candidates?: Array<{
+          content?: { parts?: Array<{ inlineData?: { data?: string }; text?: string }> };
+        }>;
+      };
+      const parts = geminiData.candidates?.[0]?.content?.parts ?? [];
+      for (const part of parts) {
+        if (part.inlineData?.data) {
+          return { image: `data:image/png;base64,${part.inlineData.data}` };
+        }
+      }
+      return { error: 'Gemini did not return an image. Try again.' };
+    }
+
     const response = await fetch(NANO_BANANA_API_URL, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${nanoKey}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -166,7 +164,7 @@ export async function generateImage(formData: FormData): Promise<GenerateResult>
         error:
           response.status === 401
             ? 'Invalid API key. Check NANO_BANANA_API_KEY in .env.local'
-            : 'AI processing failed.',
+            : `AI failed: ${errText.slice(0, 150)}`,
       };
     }
 
@@ -203,7 +201,7 @@ export async function generateImage(formData: FormData): Promise<GenerateResult>
     if (isNetwork) {
       return {
         error:
-          "Nano Banana API unreachable. Use fal.ai instead: add FAL_KEY to .env.local (get a key at https://fal.ai).",
+          'AI service unreachable. If using a Google key (AIzaSy...), check it at aistudio.google.com. Otherwise check NANO_BANANA_API_KEY and network.',
       };
     }
     return { error: err.message };
