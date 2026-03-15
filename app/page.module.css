@@ -312,6 +312,110 @@
   }
 }
 
+/* Use cases */
+.useCasesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.useCaseCard {
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-smooth);
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.useCaseCard:nth-child(1) { animation-delay: 0.05s; }
+.useCaseCard:nth-child(2) { animation-delay: 0.1s; }
+.useCaseCard:nth-child(3) { animation-delay: 0.15s; }
+.useCaseCard:nth-child(4) { animation-delay: 0.2s; }
+
+.useCaseCard:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--accent-subtle);
+  transform: translateY(-3px);
+}
+
+.useCaseIcon {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.useCaseTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 0.5rem;
+}
+
+.useCaseText {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .useCasesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .useCasesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tips for best results */
+.tipsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tipItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.5;
+  transition: border-color var(--transition-fast);
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.tipItem:nth-child(1) { animation-delay: 0.05s; }
+.tipItem:nth-child(2) { animation-delay: 0.1s; }
+.tipItem:nth-child(3) { animation-delay: 0.15s; }
+.tipItem:nth-child(4) { animation-delay: 0.2s; }
+
+.tipItem:hover {
+  border-color: var(--accent);
+}
+
+.tipBullet {
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
 /* Create section header & content */
 #create .header {
   animation: fadeInUp 0.6s ease-out both;
