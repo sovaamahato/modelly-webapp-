@@ -47,6 +47,36 @@ const CORE_FEATURES = [
   },
 ];
 
+const USE_CASES = [
+  {
+    title: 'Social media',
+    description: 'Stand out with unique, personalized looks for Instagram, TikTok, or LinkedIn.',
+    icon: '📱',
+  },
+  {
+    title: 'Virtual try-on',
+    description: 'See how different outfits and styles look on you before you buy or commit.',
+    icon: '👔',
+  },
+  {
+    title: 'Portfolio & creative',
+    description: 'Create striking visuals for your portfolio, mood boards, or creative projects.',
+    icon: '✨',
+  },
+  {
+    title: 'Gifts & fun',
+    description: 'Surprise friends with custom images or try celebrity and editorial styles for fun.',
+    icon: '🎁',
+  },
+];
+
+const TIPS = [
+  'Use a clear, well-lit photo of yourself — front-facing or a slight angle works best.',
+  'For the model image, choose an outfit or style shot on a similar body type for more natural results.',
+  'Avoid heavy filters or low-resolution images; the AI works best with sharp, recognizable faces.',
+  'Try our Casual, Formal, or Street templates first if you’re not sure what to upload.',
+];
+
 const FAQ_ITEMS = [
   {
     question: 'What kind of photos work best?',
@@ -63,6 +93,10 @@ const FAQ_ITEMS = [
   {
     question: 'What image formats are supported?',
     answer: 'You can upload JPEG, PNG, or WebP images. Each file should be under 4MB for best performance.',
+  },
+  {
+    question: 'Can I use the generated images commercially?',
+    answer: 'Generated images are for personal and creative use. Check the terms of the AI provider (e.g. fal.ai) if you plan to use results commercially.',
   },
 ];
 
@@ -324,6 +358,43 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Use cases */}
+      <section id="use-cases" className={styles.section}>
+        <div className={styles.containerWide}>
+          <h2 className={styles.sectionTitle}>What you can create</h2>
+          <p className={styles.sectionSubtitle}>
+            From social feeds to virtual try-on — here’s how people use Modelly.
+          </p>
+          <div className={styles.useCasesGrid}>
+            {USE_CASES.map((useCase, i) => (
+              <div key={i} className={styles.useCaseCard}>
+                <span className={styles.useCaseIcon} aria-hidden>{useCase.icon}</span>
+                <h3 className={styles.useCaseTitle}>{useCase.title}</h3>
+                <p className={styles.useCaseText}>{useCase.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tips */}
+      <section className={`${styles.section} ${styles.sectionAlt}`}>
+        <div className={styles.container}>
+          <h2 className={styles.sectionTitle}>Tips for best results</h2>
+          <p className={styles.sectionSubtitle}>
+            Get the most natural and realistic outputs with these quick tips.
+          </p>
+          <ul className={styles.tipsList}>
+            {TIPS.map((tip, i) => (
+              <li key={i} className={styles.tipItem}>
+                <span className={styles.tipBullet} aria-hidden>•</span>
+                <span>{tip}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className={styles.section}>
         <div className={styles.container}>
@@ -538,6 +609,7 @@ export default function Home() {
             <a href="#hero">Home</a>
             <a href="#how-it-works">How it works</a>
             <a href="#features">Features</a>
+            <a href="#use-cases">Use cases</a>
             <a href="#faq">FAQ</a>
             <a href="#create">Create</a>
           </div>
