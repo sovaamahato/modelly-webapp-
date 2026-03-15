@@ -30,17 +30,16 @@
 .heroBg {
   position: absolute;
   inset: 0;
-  background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&q=80');
+  background: linear-gradient(165deg, #f5f0e8 0%, #ebe4d9 40%, #f0ebe2 70%, #faf8f5 100%);
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
 }
 
 .heroBg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 10, 12, 0.75) 0%, rgba(10, 10, 12, 0.5) 40%, rgba(10, 10, 12, 0.9) 100%);
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(180, 83, 9, 0.06) 0%, transparent 55%);
   pointer-events: none;
 }
 
@@ -63,12 +62,12 @@
 
 .heroTitleAccent {
   color: var(--accent);
-  text-shadow: 0 0 48px var(--accent-glow);
+  text-shadow: 0 0 40px var(--accent-glow);
 }
 
 .heroSubtitle {
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 2.25rem;
 }
@@ -88,7 +87,7 @@
   justify-content: center;
   padding: 1rem 2.25rem;
   background: var(--accent);
-  color: var(--bg);
+  color: #fff;
   font-weight: 600;
   font-size: 1.05rem;
   border-radius: var(--radius);
@@ -153,7 +152,7 @@
 }
 
 .sectionAlt {
-  background: rgba(22, 22, 26, 0.6);
+  background: rgba(245, 240, 232, 0.6);
 }
 
 .sectionTitle {
@@ -187,6 +186,7 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   text-align: center;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-smooth);
   animation: fadeInUp 0.6s ease-out both;
@@ -198,7 +198,7 @@
 
 .step:hover {
   border-color: var(--accent);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--accent-subtle);
   transform: translateY(-4px);
 }
 
@@ -256,6 +256,7 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: border-color var(--transition-fast), transform var(--transition-smooth), box-shadow var(--transition-smooth);
   animation: fadeInUp 0.6s ease-out both;
@@ -269,7 +270,7 @@
 .coreFeatureCard:hover {
   border-color: var(--accent);
   transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--accent-subtle);
 }
 
 .coreFeatureImgWrap {
@@ -364,12 +365,13 @@
   border: 2px dashed var(--border);
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow-sm);
   transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-smooth);
   min-height: 220px;
 }
 
 .uploadBox:hover {
-  border-color: rgba(34, 197, 94, 0.4);
+  border-color: rgba(180, 83, 9, 0.35);
 }
 
 .uploadBox.dragOver {
@@ -504,7 +506,7 @@
 
 .btnPrimary {
   background: var(--accent);
-  color: var(--bg);
+  color: #fff;
 }
 
 .btnPrimary:hover:not(:disabled) {
@@ -557,9 +559,15 @@
 }
 
 .error {
-  background: rgba(217, 83, 79, 0.15);
+  background: rgba(220, 38, 38, 0.08);
   color: var(--error);
-  border: 1px solid rgba(217, 83, 79, 0.4);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.successMessage {
+  background: rgba(5, 150, 105, 0.08);
+  color: var(--success);
+  border: 1px solid rgba(5, 150, 105, 0.25);
 }
 
 .result {
@@ -578,7 +586,9 @@
 
 .resultPreview {
   background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -605,7 +615,7 @@
   max-height: 70vh;
   object-fit: contain;
   border-radius: var(--radius-sm);
-  background: var(--bg);
+  background: var(--surface-hover);
 }
 
 /* Footer */
@@ -613,6 +623,7 @@
   padding: 3.5rem 1.5rem 2rem;
   background: var(--surface);
   border-top: 1px solid var(--border);
+  box-shadow: 0 -1px 0 var(--border);
   animation: fadeIn 0.6s ease-out;
 }
 
@@ -680,6 +691,7 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
   margin-bottom: 0.75rem;
   overflow: hidden;
   transition: border-color var(--transition-fast);
@@ -745,7 +757,7 @@
 /* Final CTA */
 .finalCta {
   padding: 5rem 1.5rem;
-  background: linear-gradient(180deg, var(--surface) 0%, rgba(20, 20, 24, 0.95) 100%);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-hover) 100%);
   border-top: 1px solid var(--border);
   text-align: center;
   animation: fadeIn 0.6s ease-out;
@@ -785,7 +797,7 @@
   justify-content: center;
   padding: 1rem 2.5rem;
   background: var(--accent);
-  color: var(--bg);
+  color: #fff;
   font-weight: 600;
   font-size: 1.05rem;
   border-radius: var(--radius);

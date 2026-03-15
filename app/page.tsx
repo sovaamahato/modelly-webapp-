@@ -477,7 +477,7 @@ export default function Home() {
         </div>
 
         {connectionTest && (
-          <div className={styles.message} style={{ background: 'rgba(92, 184, 92, 0.15)', color: 'var(--success)', borderColor: 'rgba(92, 184, 92, 0.4)' }}>
+          <div className={`${styles.message} ${styles.successMessage}`}>
             {connectionTest}
           </div>
         )}
